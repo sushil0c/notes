@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Link</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Create Link</h1>
+    <form id="linkForm" onsubmit="saveLink(event)">
+      <input type="text" id="title" placeholder="Title" required>
+      <input type="text" id="description" placeholder="Description" required>
+      <input type="url" id="url" placeholder="URL" required>
+      <button type="submit">Save Link</button>
+    </form>
+  </div>
+  
+  <script src="script.js"></script>
+  <script>
+    function saveLink(event) {
+      event.preventDefault();
+      
+      var title = document.getElementById("title").value;
+      var description = document.getElementById("description").value;
+      var url = document.getElementById("url").value;
+      
+      // Save the link to local storage or send it to a server
+      // For simplicity, let's just log it to the console
+      console.log("Title: " + title);
+      console.log("Description: " + description);
+      console.log("URL: " + url);
+      
+      // Redirect back to the main page
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
