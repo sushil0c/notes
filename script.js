@@ -1,23 +1,27 @@
-// Initialize dark mode based on user preference
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-  document.body.classList.add('dark-mode');
+let notes = JSON.parse(localStorage.getItem('notes')) || [];
+let editingNoteIndex = null;
+
+// Initialize the app
+function init() {
+  const isEditPage = document.getElementById('noteContent');
+  if (isEditPage) initializeEditPage();
+  else {
+    displayNotes();
+    document.getElementById('welcomeModal').style.display = 'flex';
+  }
 }
 
-// Functions for Welcome Modal
+// Close Welcome Modal
 function closeModal() {
   document.getElementById('welcomeModal').style.display = 'none';
 }
 
-// Dark Mode Toggle
+// Toggle Dark Mode
 function toggleDarkMode() {
   document.body.classList.toggle('dark-mode');
 }
 
-// Notes Data Management
-let notes = JSON.parse(localStorage.getItem('notes')) || [];
-let editingNoteIndex = null;
-
-// Navigation functions
+// Navigate to Edit Page
 function navigateToEditPage(index = null) {
   editingNoteIndex = index;
   if (index !== null) {
@@ -28,11 +32,12 @@ function navigateToEditPage(index = null) {
   window.location.href = "edit.html";
 }
 
+// Back to Main Page
 function goBack() {
   window.location.href = "index.html";
 }
 
-// Save note function
+// Save Note
 function saveNote() {
   const content = document.getElementById('noteContent').value.trim();
   if (!content) {
@@ -50,25 +55,24 @@ function saveNote() {
   goBack();
 }
 
-// Display notes on the main page
+// Display Notes
 function displayNotes() {
   const notesList = document.getElementById('notesList');
   notesList.innerHTML = notes.map((note, index) => `
     <div>
-      <h3 tabindex="0" onclick="showNoteContent(${index})" title="${note.content.substring(0, 100)}">${note.content.substring(0, 20)}</h3>
+      <h3 tabindex="0" onclick="showNoteContent(${index})">${note.content.substring(0, 20)}...</h3>
       <button onclick="navigateToEditPage(${index})">Edit</button>
       <button onclick="deleteNoteConfirm(${index})">Delete</button>
     </div>
   `).join('');
 }
 
-// Show note content line-by-line
+// Show Note Content
 function showNoteContent(index) {
   const note = notes[index];
   const contentLines = note.content.split('\n');
   const contentDisplay = contentLines.map(line => `<p>${line}</p>`).join('');
-  const notesList = document.getElementById('notesList');
-  notesList.innerHTML = `
+  document.getElementById('notesList').innerHTML = `
     <div>
       <button onclick="displayNotes()">Back</button>
       <div>${contentDisplay}</div>
@@ -76,7 +80,16 @@ function showNoteContent(index) {
   `;
 }
 
-// Sort notes
+// Delete Note with Confirmation
+function deleteNoteConfirm(index) {
+  if (confirm("Are you sure you want to delete this note?")) {
+    notes.splice(index, 1);
+    localStorage.setItem('notes', JSON.stringify(notes));
+    displayNotes();
+  }
+}
+
+// Sort Notes
 function sortNotes() {
   const sortOption = document.getElementById('sortOptions').value;
   if (sortOption === 'alphabetical') {
@@ -89,62 +102,81 @@ function sortNotes() {
   displayNotes();
 }
 
-// Search notes
+// Search Notes
 function searchNotes() {
-  const searchQuery = document.getElementById('searchBar').value.toLowerCase();
-  const filteredNotes = notes.filter(note => note.content.toLowerCase().includes(searchQuery));
-  const notesList = document.getElementById('notesList');
-  notesList.innerHTML = filteredNotes.map((note, index) => `
+  const query = document.getElementById('searchBar').value.toLowerCase();
+  const filteredNotes = notes.filter(note => note.content.toLowerCase().includes(query));
+  document.getElementById('notesList').innerHTML = filteredNotes.map((note, index) => `
     <div>
-      <h3 tabindex="0" onclick="showNoteContent(${index})" title="${note.content.substring(0, 100)}">${note.content.substring(0, 20)}</h3>
+      <h3 tabindex="0" onclick="showNoteContent(${index})">${note.content.substring(0, 20)}...</h3>
     </div>
   `).join('');
 }
-
-// Import and Export Notes
-function exportNotes() {
-  const dataStr = JSON.stringify(notes);
-  const blob = new Blob([dataStr], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "notes.json";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+// Save Feedback
+function saveFeedback() {
+  const feedback = document.getElementById('feedback').value.trim();
+  if (feedback) {
+    let feedbackList = JSON.parse(localStorage.getItem('feedbackList')) || [];
+    feedbackList.push({ feedback, date: new Date().toISOString() });
+    localStorage.setItem('feedbackList', JSON.stringify(feedbackList));
+    alert("Feedback submitted. Thank you!");
+    document.getElementById('feedback').value = ''; // Clear feedback textarea
+  } else {
+    alert("Feedback cannot be empty.");
+  }
 }
 
+// Export Notes as JSON file
+function exportNotes() {
+  const dataStr = JSON.stringify(notes);
+  const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+  
+  const exportFileDefaultName = 'notes.json';
+  const linkElement = document.createElement('a');
+  linkElement.setAttribute('href', dataUri);
+  linkElement.setAttribute('download', exportFileDefaultName);
+  linkElement.click();
+}
+
+// Import Notes from JSON file
 function importNotes() {
   const fileInput = document.getElementById('importNotes');
   const file = fileInput.files[0];
-  const reader = new FileReader();
-
-  reader.onload = function (event) {
-    const importedNotes = JSON.parse(event.target.result);
-    notes = [...notes, ...importedNotes];
-    localStorage.setItem('notes', JSON.stringify(notes));
-    displayNotes();
-  };
-
   if (file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      try {
+        const importedNotes = JSON.parse(event.target.result);
+        if (Array.isArray(importedNotes)) {
+          notes = notes.concat(importedNotes); // Merge imported notes with existing ones
+          localStorage.setItem('notes', JSON.stringify(notes));
+          displayNotes();
+          alert("Notes imported successfully!");
+        } else {
+          alert("Invalid file format.");
+        }
+      } catch (e) {
+        alert("Error reading file.");
+      }
+    };
     reader.readAsText(file);
   }
 }
 
-// Save Feedback to Local Storage
-function saveFeedback() {
-  const feedback = document.getElementById('feedback').value;
-  if (feedback) {
-    const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
-    feedbacks.push(feedback);
-    localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
-    alert('Feedback saved locally!');
-    document.getElementById('feedback').value = ''; // Clear feedback field
-  } else {
-    alert('Please enter feedback before submitting.');
+// Toggle Help Section visibility
+function toggleHelp() {
+  const helpSection = document.getElementById('helpSection');
+  helpSection.style.display = helpSection.style.display === 'flex' ? 'none' : 'flex';
+}
+
+// Initialize Edit Page content if editing a note
+function initializeEditPage() {
+  const noteContent = localStorage.getItem('editingNoteContent');
+  if (noteContent) {
+    document.getElementById('noteContent').value = noteContent;
+    localStorage.removeItem('editingNoteContent'); // Clear temp storage after loading content
   }
 }
 
-// Initialize the content on the edit page if editing an existing note
-function initializeEditPage() {
-  const noteContent = localStorage.get
+// Initialize the app on page load
+document.addEventListener('DOMContentLoaded', init);

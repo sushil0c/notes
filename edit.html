@@ -9,12 +9,11 @@
 <body>
   <header>
     <h1>Edit Note</h1>
-    <button onclick="saveNote()" aria-label="Save note">Save</button>
-    <button onclick="goBack()" aria-label="Back to main page">Back</button>
+    <button onclick="goBack()">Back</button>
   </header>
 
-  <!-- Note Content Input -->
-  <textarea id="noteContent" placeholder="Enter your note here..." aria-label="Note content"></textarea>
+  <textarea id="noteContent" placeholder="Write your note here..." aria-label="Note content"></textarea>
+  <button onclick="saveNote()">Save Note</button>
 
   <script src="script.js"></script>
 </body>
