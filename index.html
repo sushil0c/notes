@@ -3,59 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Accessible Notepad</title>
+  <title>Mobile Notepad</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Welcome Pop-up -->
-  <div id="welcomeModal" class="modal">
-    <div class="modal-content">
-      <p>Welcome to the Accessible Notepad! Are you ready to start?</p>
-      <button onclick="closeModal()">Yes</button>
-    </div>
-  </div>
-
   <!-- Header Section -->
   <header>
-    <h1>Accessible Notepad</h1>
-    <button onclick="navigateToEditPage()" aria-label="Add a new note">Add Note</button>
-    <button onclick="toggleHelp()" aria-label="Help section">Help</button>
-    <button aria-label="Dark mode toggle">
-      <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()"> Dark Mode
-    </button>
-    <button onclick="exportNotes()" aria-label="Export notes">Export Notes</button>
-    <input type="file" id="importNotes" onchange="importNotes()" style="display: none;">
-    <label for="importNotes" class="button-label">Import Notes</label>
+    <h1>Mobile Notepad</h1>
+    <button onclick="navigateToEditPage()">Add Note</button>
   </header>
 
-  <!-- Sort and Search -->
-  <div class="control-panel">
-    <label for="sortOptions">Sort By:</label>
-    <select id="sortOptions" aria-label="Sort notes" onchange="sortNotes()">
-      <option value="alphabetical">Alphabetically</option>
-      <option value="recentlyCreated">Recently Created</option>
-      <option value="lastEdited">Last Edited</option>
-    </select>
-
-    <input type="text" id="searchBar" aria-label="Search notes" placeholder="Search notes..." oninput="searchNotes()">
-  </div>
-
   <!-- Notes Display Section -->
-  <div id="notesList" aria-live="polite" class="notes-list"></div>
-
-  <!-- Help Section -->
-  <div id="helpSection" class="modal">
-    <div class="modal-content">
-      <p>Instructions on how to use the Accessible Notepad:</p>
-      <ul>
-        <li>Use the "Add Note" button to add a new note.</li>
-        <li>Sort notes by alphabet, creation date, or last edit date using the dropdown menu.</li>
-        <li>Search notes using the search bar for easy retrieval.</li>
-        <li>Export notes as a JSON file or import notes from a JSON file.</li>
-      </ul>
-      <button onclick="toggleHelp()">Close Help</button>
-    </div>
-  </div>
+  <div id="notesList" class="notes-list"></div>
 
   <script src="script.js"></script>
 </body>
