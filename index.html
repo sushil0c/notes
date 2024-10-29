@@ -1,35 +1,69 @@
-<!DOCTYPE html><html lang="en"><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="styles.css">
-    <title>Notepad</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessible Notepad</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header class="header">
-    <div class="container">
-        <h1 class="header__title">Notepad  </h1>
-        <h2 class="header__subtitle">Save your notes very easily </h2>
+  <!-- Welcome Pop-up -->
+  <div id="welcomeModal" class="modal">
+    <div class="modal-content">
+      <p>Welcome to the Accessible Notepad! Are you ready to start?</p>
+      <button onclick="closeModal()">Yes</button>
     </div>
-</header>
-<div class="actions">
-    <div class="actions__container">
-        <input id="search-text" type="text" class="input" placeholder="search your notes">
-        <select name="" id="filter-by" class="dropdown">
-            <option value="byEdited">Sort by last edited</option>
-            <option value="byCreated">Sort by recently created</option>
-            <option value="alphabetical">Sort alphabetically</option>
-        </select>
+  </div>
+
+  <!-- Header Section -->
+  <header>
+    <h1>Accessible Notepad</h1>
+    <button onclick="navigateToEditPage()" aria-label="Add a new note">Add Note</button>
+    <button onclick="toggleHelp()" aria-label="Help section">Help</button>
+    <button aria-label="Dark mode toggle">
+      <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()"> Dark Mode
+    </button>
+    <button onclick="exportNotes()" aria-label="Export notes">Export Notes</button>
+    <input type="file" id="importNotes" onchange="importNotes()" style="display: none;">
+    <label for="importNotes" class="button-label">Import Notes</label>
+  </header>
+
+  <!-- Sort and Search -->
+  <div class="control-panel">
+    <label for="sortOptions">Sort By:</label>
+    <select id="sortOptions" aria-label="Sort notes" onchange="sortNotes()">
+      <option value="alphabetical">Alphabetically</option>
+      <option value="recentlyCreated">Recently Created</option>
+      <option value="lastEdited">Last Edited</option>
+    </select>
+
+    <input type="text" id="searchBar" aria-label="Search notes" placeholder="Search notes..." oninput="searchNotes()">
+  </div>
+
+  <!-- Notes Display Section -->
+  <div id="notesList" aria-live="polite" class="notes-list"></div>
+
+  <!-- Feedback Section -->
+  <div class="feedback-section">
+    <textarea id="feedback" placeholder="Provide your feedback..." aria-label="Feedback"></textarea>
+    <button onclick="saveFeedback()">Submit Feedback</button>
+  </div>
+
+  <!-- Help Section -->
+  <div id="helpSection" class="modal">
+    <div class="modal-content">
+      <p>Instructions on how to use the Accessible Notepad:</p>
+      <ul>
+        <li>Use the "Add Note" button to add a new note.</li>
+        <li>Sort notes by alphabet, creation date, or last edit date using the dropdown menu.</li>
+        <li>Search notes using the search bar for easy retrieval.</li>
+        <li>Submit feedback to help improve the app.</li>
+        <li>Export notes as a JSON file or import notes from a JSON file.</li>
+      </ul>
+      <button onclick="toggleHelp()">Close Help</button>
     </div>
-</div>
-<div class="container">
-    <div id="notes"></div>
-    <button id="create-note" class="button">Create a Note</button>    
-</div>    
-    <script src="uuid.js"></script>
-    <script src="moment-with-locales.js"></script> 
-    <script src="notes-functions.js"></script>
-    <script src="notes-app.js"></script>
+  </div>
 
-
-</body></html>
+  <script src="script.js"></script>
+</body>
+</html>
