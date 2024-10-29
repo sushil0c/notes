@@ -109,64 +109,10 @@ function searchNotes() {
   document.getElementById('notesList').innerHTML = filteredNotes.map((note, index) => `
     <div>
       <h3 tabindex="0" onclick="showNoteContent(${index})">${note.content.substring(0, 20)}...</h3>
+      <button onclick="navigateToEditPage(${index})">Edit</button>
+      <button onclick="deleteNoteConfirm(${index})">Delete</button>
     </div>
   `).join('');
-}
-// Save Feedback
-function saveFeedback() {
-  const feedback = document.getElementById('feedback').value.trim();
-  if (feedback) {
-    let feedbackList = JSON.parse(localStorage.getItem('feedbackList')) || [];
-    feedbackList.push({ feedback, date: new Date().toISOString() });
-    localStorage.setItem('feedbackList', JSON.stringify(feedbackList));
-    alert("Feedback submitted. Thank you!");
-    document.getElementById('feedback').value = ''; // Clear feedback textarea
-  } else {
-    alert("Feedback cannot be empty.");
-  }
-}
-
-// Export Notes as JSON file
-function exportNotes() {
-  const dataStr = JSON.stringify(notes);
-  const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-  
-  const exportFileDefaultName = 'notes.json';
-  const linkElement = document.createElement('a');
-  linkElement.setAttribute('href', dataUri);
-  linkElement.setAttribute('download', exportFileDefaultName);
-  linkElement.click();
-}
-
-// Import Notes from JSON file
-function importNotes() {
-  const fileInput = document.getElementById('importNotes');
-  const file = fileInput.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      try {
-        const importedNotes = JSON.parse(event.target.result);
-        if (Array.isArray(importedNotes)) {
-          notes = notes.concat(importedNotes); // Merge imported notes with existing ones
-          localStorage.setItem('notes', JSON.stringify(notes));
-          displayNotes();
-          alert("Notes imported successfully!");
-        } else {
-          alert("Invalid file format.");
-        }
-      } catch (e) {
-        alert("Error reading file.");
-      }
-    };
-    reader.readAsText(file);
-  }
-}
-
-// Toggle Help Section visibility
-function toggleHelp() {
-  const helpSection = document.getElementById('helpSection');
-  helpSection.style.display = helpSection.style.display === 'flex' ? 'none' : 'flex';
 }
 
 // Initialize Edit Page content if editing a note
