@@ -33,14 +33,17 @@ function saveNote() {
     return;
   }
   const timestamp = new Date().toISOString();
+  
   if (editingNoteIndex !== null) {
     notes[editingNoteIndex].content = content;
     notes[editingNoteIndex].updatedAt = timestamp;
   } else {
     notes.push({ content, createdAt: timestamp, updatedAt: timestamp });
   }
+
+  // Save notes to local storage
   localStorage.setItem('notes', JSON.stringify(notes));
-  goBack();
+  goBack(); // Navigate back to main page
 }
 
 // Display Notes
@@ -58,7 +61,12 @@ function displayNotes() {
 // Show Note Content
 function showNoteContent(index) {
   const note = notes[index];
-  const contentDisplay = `<div><h3>Note Content:</h3><p>${note.content}</p><button onclick="displayNotes()">Back</button></div>`;
+  const contentDisplay = `
+    <div>
+      <h3>Note Content:</h3>
+      <p>${note.content}</p>
+      <button onclick="displayNotes()">Back</button>
+    </div>`;
   document.getElementById('notesList').innerHTML = contentDisplay;
 }
 
@@ -66,8 +74,8 @@ function showNoteContent(index) {
 function deleteNoteConfirm(index) {
   if (confirm("Are you sure you want to delete this note?")) {
     notes.splice(index, 1);
-    localStorage.setItem('notes', JSON.stringify(notes));
-    displayNotes();
+    localStorage.setItem('notes', JSON.stringify(notes)); // Update local storage
+    displayNotes(); // Refresh note display
   }
 }
 
