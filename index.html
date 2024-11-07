@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" 
-          content="IE=edge">
-    <meta name="viewport" 
-          content="width=device-width, initial-scale=1.0">
-    <title>Note App</title>
-    <link rel="stylesheet" href="./style.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Taking App</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/bf520e6492.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
-
 <body>
     <div class="btn">
         <div class="heading">
             <h1>Note Taking App</h1>
         </div>
-        <button id="addBtn">
-            <i class="fas fa-plus"></i>
-            Add Note
+        <button id="addBtn" aria-label="Add a new note">
+            <i class="fas fa-plus"></i> Add Note
         </button>
     </div>
-    <div id="main">
 
+    <div id="colorSelection">
+        <h3>Select a Background Color</h3>
+        <button id="colorRed" class="colorBtn" aria-label="Select red background">Red</button>
+        <button id="colorBlue" class="colorBtn" aria-label="Select blue background">Blue</button>
+        <button id="colorGreen" class="colorBtn" aria-label="Select green background">Green</button>
+        <button id="colorYellow" class="colorBtn" aria-label="Select yellow background">Yellow</button>
     </div>
-    <script src=
-"https://kit.fontawesome.com/bf520e6492.js" 
-            crossorigin="anonymous">
-      </script>
-    <script src="./script.js"></script>
-</body>
 
+    <div id="main"></div>
+
+    <script src="script.js"></script>
+</body>
 </html>

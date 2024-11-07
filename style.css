@@ -1,0 +1,101 @@
+/* Reset CSS */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+/* Button styles */
+.btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.heading h1 {
+    color: #333;
+}
+
+#addBtn {
+    background-color: #2d3436;
+    color: white;
+    padding: 10px;
+    border: 0;
+    outline: 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#colorSelection {
+    margin-bottom: 20px;
+}
+
+.colorBtn {
+    background-color: #2d3436;
+    color: white;
+    padding: 10px;
+    border: 0;
+    outline: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+/* Note styling */
+.note {
+    width: 380px;
+    background-color: white;
+    margin: 15px;
+    margin-top: 55px;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.note-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.note-content {
+    font-size: 1rem;
+}
+
+.icons {
+    display: flex;
+    justify-content: start;
+    margin-bottom: 10px;
+}
+
+.icons i {
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background-color: beige;
+}
+
+textarea:focus {
+    border-color: #007bff;
+}
+
+/* Collapsible note */
+.collapsed {
+    display: none;
+}

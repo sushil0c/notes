@@ -1,97 +1,97 @@
 const addBtn = document.querySelector("#addBtn");
 const main = document.querySelector("#main");
 
-// Click event listener
-addBtn.addEventListener("click", function () {
-    addNote();
-});
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
+let selectedColor = "#ffffff"; // Default color
 
-// Save button function
 const saveNotes = () => {
-
-    // Select content textareas
-    const notes = 
-        document.querySelectorAll(".note .content"); 
-        
-    // Select title textareas
-    const titles = 
-        document.querySelectorAll(".note .title"); 
-
-    const data = [];
-
-    notes.forEach((note, index) => {
-        const content = note.value;
-        const title = titles[index].value;
-        console.log(title);
-        if (content.trim() !== "") {
-            data.push({ title, content });
-        }
-    });
-
-    const titlesData = 
-        data.map((item) => item.title);
-    console.log(titlesData);
-    localStorage.setItem(
-        "titles", JSON.stringify(titlesData));
-
-    const contentData = 
-        data.map((item) => item.content);
-    localStorage.setItem(
-        "notes", JSON.stringify(contentData));
+    localStorage.setItem("notes", JSON.stringify(notes));
+    loadNotes();
 };
 
-// Addnote button function
-const addNote = (text = "", title = "") => {
-    const note = document.createElement("div");
-    note.classList.add("note");
-    note.innerHTML = `
-    <div class="icons">
-         <i class="save fas fa-save" 
-             style="color:red">
-         </i>
-         <i class="trash fas fa-trash" 
-             style="color:yellow">
-         </i> 
-    </div>
-    <div class="title-div">
-        <textarea class="title" 
-            placeholder="Write the title ...">${title}
-        </textarea>
-    </div>
-    <textarea class="content" 
-        placeholder="Note down your thoughts ...">${text}
-    </textarea>
-    `;
-    function handleTrashClick() {
-        note.remove();
-        saveNotes();
-    }
-    function handleSaveClick() {
-        saveNotes();
-    }
-    const delBtn = note.querySelector(".trash");
-    const saveButton = note.querySelector(".save");
-    const textareas = note.querySelectorAll("textarea");
+const loadNotes = () => {
+    main.innerHTML = "";
+    notes.forEach((note, index) => {
+        addNoteToDOM(note, index);
+    });
+};
 
-    delBtn.addEventListener("click", handleTrashClick);
-    saveButton.addEventListener("click", handleSaveClick);
-    main.appendChild(note);
+// Add a new note
+const addNote = (title = "", content = "", color = "#ffffff") => {
+    const note = { title, content, color };
+    notes.push(note);
     saveNotes();
 };
 
-// Loading all the notes those are saved in 
-// the localstorage
-function loadNotes() {
+// Display note in the DOM
+const addNoteToDOM = (note, index) => {
+    const noteDiv = document.createElement("div");
+    noteDiv.classList.add("note");
+    noteDiv.style.backgroundColor = note.color;
 
-    const titlesData = 
-        JSON.parse(localStorage.getItem("titles")) || [];
-    const contentData = 
-        JSON.parse(localStorage.getItem("notes")) || [];
-        
-    for (let i = 0; 
-            i < Math.max(
-                titlesData.length, contentData.length); i++) {
-        addNote(contentData[i], titlesData[i]);
-    }
-}
+    noteDiv.innerHTML = `
+        <div class="icons">
+            <i class="fas fa-save" style="color: red;"></i>
+            <i class="fas fa-trash" style="color: yellow;"></i>
+        </div>
+        <div class="note-title" onclick="toggleContent(${index})">${note.title}</div>
+        <div class="note-content collapsed" id="content-${index}">
+            ${marked(note.content)}
+        </div>
+        <textarea class="note-title-textarea" placeholder="Write the title...">${note.title}</textarea>
+        <textarea class="note-content-textarea" placeholder="Note content...">${note.content}</textarea>
+    `;
+
+    const saveButton = noteDiv.querySelector(".fa-save");
+    const deleteButton = noteDiv.querySelector(".fa-trash");
+    const titleTextarea = noteDiv.querySelector(".note-title-textarea");
+    const contentTextarea = noteDiv.querySelector(".note-content-textarea");
+
+    saveButton.addEventListener("click", () => {
+        note.title = titleTextarea.value;
+        note.content = contentTextarea.value;
+        saveNotes();
+    });
+
+    deleteButton.addEventListener("click", () => {
+        notes.splice(index, 1);
+        saveNotes();
+    });
+
+    main.appendChild(noteDiv);
+};
+
+// Toggle note content visibility
+const toggleContent = (index) => {
+    const contentDiv = document.getElementById(`content-${index}`);
+    contentDiv.classList.toggle("collapsed");
+};
+
+// Add a new note when the "Add Note" button is clicked
+addBtn.addEventListener("click", () => {
+    addNote("", "", selectedColor);
+});
+
+// Select background color for notes
+document.querySelector("#colorRed").addEventListener("click", () => {
+    selectedColor = "#ff0000";
+    alert("Background color changed to red");
+});
+
+document.querySelector("#colorBlue").addEventListener("click", () => {
+    selectedColor = "#0000ff";
+    alert("Background color changed to blue");
+});
+
+document.querySelector("#colorGreen").addEventListener("click", () => {
+    selectedColor = "#008000";
+    alert("Background color changed to green");
+});
+
+document.querySelector("#colorYellow").addEventListener("click", () => {
+    selectedColor = "#ffff00";
+    alert("Background color changed to yellow");
+});
+
+// Initial load of notes from local storage
 loadNotes();
