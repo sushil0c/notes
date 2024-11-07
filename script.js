@@ -1,92 +1,97 @@
-let notes = JSON.parse(localStorage.getItem('notes')) || [];
-let editingNoteIndex = null;
+const addBtn = document.querySelector("#addBtn");
+const main = document.querySelector("#main");
 
-// Initialize the app
-function init() {
-  const isEditPage = document.getElementById('noteContent');
-  if (isEditPage) {
-    initializeEditPage();
-  } else {
-    displayNotes();
-  }
-}
+// Click event listener
+addBtn.addEventListener("click", function () {
+    addNote();
+});
 
-// Navigate to Edit Page
-function navigateToEditPage(index = null) {
-  editingNoteIndex = index;
-  if (index !== null) {
-    localStorage.setItem('editingNoteContent', notes[index].content);
-  }
-  window.location.href = "edit.html";
-}
+// Save button function
+const saveNotes = () => {
 
-// Back to Main Page
-function goBack() {
-  window.location.href = "index.html";
-}
+    // Select content textareas
+    const notes = 
+        document.querySelectorAll(".note .content"); 
+        
+    // Select title textareas
+    const titles = 
+        document.querySelectorAll(".note .title"); 
 
-// Save Note
-function saveNote() {
-  const content = document.getElementById('noteContent').value.trim();
-  if (!content) {
-    alert("Note cannot be empty.");
-    return;
-  }
-  const timestamp = new Date().toISOString();
-  
-  if (editingNoteIndex !== null) {
-    notes[editingNoteIndex].content = content;
-    notes[editingNoteIndex].updatedAt = timestamp;
-  } else {
-    notes.push({ content, createdAt: timestamp, updatedAt: timestamp });
-  }
+    const data = [];
 
-  // Save notes to local storage
-  localStorage.setItem('notes', JSON.stringify(notes));
-  goBack(); // Navigate back to main page
-}
+    notes.forEach((note, index) => {
+        const content = note.value;
+        const title = titles[index].value;
+        console.log(title);
+        if (content.trim() !== "") {
+            data.push({ title, content });
+        }
+    });
 
-// Display Notes
-function displayNotes() {
-  const notesList = document.getElementById('notesList');
-  notesList.innerHTML = notes.map((note, index) => `
-    <div>
-      <h3 onclick="showNoteContent(${index})">${note.content.substring(0, 20)}...</h3>
-      <button onclick="navigateToEditPage(${index})">Edit</button>
-      <button onclick="deleteNoteConfirm(${index})">Delete</button>
+    const titlesData = 
+        data.map((item) => item.title);
+    console.log(titlesData);
+    localStorage.setItem(
+        "titles", JSON.stringify(titlesData));
+
+    const contentData = 
+        data.map((item) => item.content);
+    localStorage.setItem(
+        "notes", JSON.stringify(contentData));
+};
+
+// Addnote button function
+const addNote = (text = "", title = "") => {
+    const note = document.createElement("div");
+    note.classList.add("note");
+    note.innerHTML = `
+    <div class="icons">
+         <i class="save fas fa-save" 
+             style="color:red">
+         </i>
+         <i class="trash fas fa-trash" 
+             style="color:yellow">
+         </i> 
     </div>
-  `).join('');
-}
+    <div class="title-div">
+        <textarea class="title" 
+            placeholder="Write the title ...">${title}
+        </textarea>
+    </div>
+    <textarea class="content" 
+        placeholder="Note down your thoughts ...">${text}
+    </textarea>
+    `;
+    function handleTrashClick() {
+        note.remove();
+        saveNotes();
+    }
+    function handleSaveClick() {
+        saveNotes();
+    }
+    const delBtn = note.querySelector(".trash");
+    const saveButton = note.querySelector(".save");
+    const textareas = note.querySelectorAll("textarea");
 
-// Show Note Content
-function showNoteContent(index) {
-  const note = notes[index];
-  const contentDisplay = `
-    <div>
-      <h3>Note Content:</h3>
-      <p>${note.content}</p>
-      <button onclick="displayNotes()">Back</button>
-    </div>`;
-  document.getElementById('notesList').innerHTML = contentDisplay;
-}
+    delBtn.addEventListener("click", handleTrashClick);
+    saveButton.addEventListener("click", handleSaveClick);
+    main.appendChild(note);
+    saveNotes();
+};
 
-// Delete Note with Confirmation
-function deleteNoteConfirm(index) {
-  if (confirm("Are you sure you want to delete this note?")) {
-    notes.splice(index, 1);
-    localStorage.setItem('notes', JSON.stringify(notes)); // Update local storage
-    displayNotes(); // Refresh note display
-  }
-}
+// Loading all the notes those are saved in 
+// the localstorage
+function loadNotes() {
 
-// Initialize Edit Page content if editing a note
-function initializeEditPage() {
-  const noteContent = localStorage.getItem('editingNoteContent');
-  if (noteContent) {
-    document.getElementById('noteContent').value = noteContent;
-    localStorage.removeItem('editingNoteContent'); // Clear temp storage after loading content
-  }
+    const titlesData = 
+        JSON.parse(localStorage.getItem("titles")) || [];
+    const contentData = 
+        JSON.parse(localStorage.getItem("notes")) || [];
+        
+    for (let i = 0; 
+            i < Math.max(
+                titlesData.length, contentData.length); i++) {
+        addNote(contentData[i], titlesData[i]);
+    }
 }
-
-// Initialize the app on page load
-document.addEventListener('DOMContentLoaded', init);
+loadNotes();
