@@ -2,33 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Note Taking App</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://kit.fontawesome.com/bf520e6492.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Enhanced Note-Taking App</title>
+    <link rel="stylesheet" href="styles.css"> <!-- External CSS -->
 </head>
 <body>
-    <div class="btn">
-        <div class="heading">
-            <h1>Note Taking App</h1>
-        </div>
-        <button id="addBtn" aria-label="Add a new note">
-            <i class="fas fa-plus"></i> Add Note
-        </button>
+    <!-- Dark Mode Toggle -->
+    <button class="btn" id="darkModeToggle">Toggle Dark Mode</button>
+
+    <!-- Search Notes Section -->
+    <input type="text" id="searchInput" placeholder="Search Notes" class="tags-input">
+    <button class="btn" id="searchBtn">Search</button>
+
+    <!-- Add Note Section -->
+    <button class="btn" id="addBtn">Add a new note</button>
+    <div class="note-container" id="noteContainer">
+        <div class="note-title">New Note</div>
+        <textarea id="noteTitle" placeholder="Enter note title..."></textarea>
+        <textarea id="noteContent" placeholder="Write your note here..."></textarea>
+        <input type="text" id="noteTags" class="tags-input" placeholder="Add tags (comma separated)">
+        <select id="prioritySelect" class="priority-select">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+        </select>
+        <button class="btn" id="saveBtn">Save Note</button>
     </div>
 
-    <div id="colorSelection">
-        <h3>Select a Background Color</h3>
-        <button id="colorRed" class="colorBtn" aria-label="Select red background">Red</button>
-        <button id="colorBlue" class="colorBtn" aria-label="Select blue background">Blue</button>
-        <button id="colorGreen" class="colorBtn" aria-label="Select green background">Green</button>
-        <button id="colorYellow" class="colorBtn" aria-label="Select yellow background">Yellow</button>
+    <!-- Notes Display Section -->
+    <div id="notesContainer"></div>
+
+    <!-- Clear All Notes -->
+    <div>
+        <button class="btn" id="clearBtn">Clear All Notes</button>
     </div>
 
-    <div id="main"></div>
-
-    <script src="script.js"></script>
+    <script src="script.js"></script> <!-- External JS -->
 </body>
 </html>
