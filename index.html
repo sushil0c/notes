@@ -3,19 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Note-Taking App</title>
-    <link rel="stylesheet" href="styles.css"> <!-- External CSS -->
+    <title>Accessible Note Taking App</title>
+    <link rel="stylesheet" href="styles.css"> <!
 </head>
 <body>
-    <!-- Dark Mode Toggle -->
-    <button class="btn" id="darkModeToggle">Toggle Dark Mode</button>
 
-    <!-- Search Notes Section -->
+<table>
+<tr>
+<td>
+<button class="btn" id="clearBtn">Clear All Notes</button>
+</td>
+<td>
     <input type="text" id="searchInput" placeholder="Search Notes" class="tags-input">
     <button class="btn" id="searchBtn">Search</button>
 
-    <!-- Add Note Section -->
+
+</td>
+<td>
     <button class="btn" id="addBtn">Add a new note</button>
+</td>
+<td>
+    <button onclick="pinNote(${index})">${note.pinned ? 'Unpin' : 'Pin'}</button>
+
+</td>
+</tr>
+</table>
     <div class="note-container" id="noteContainer">
         <div class="note-title">New Note</div>
         <textarea id="noteTitle" placeholder="Enter note title..."></textarea>
@@ -27,16 +39,20 @@
             <option value="High">High</option>
         </select>
         <button class="btn" id="saveBtn">Save Note</button>
+<button class="email-btn" onclick="emailShare(${index})">Share via Email</button>
     </div>
 
-    <!-- Notes Display Section -->
     <div id="notesContainer"></div>
 
-    <!-- Clear All Notes -->
-    <div>
-        <button class="btn" id="clearBtn">Clear All Notes</button>
+    <!-- Delete Confirmation Dialog -->
+    <div class="dialog-overlay" id="dialogOverlay"></div>
+    <div class="dialog" id="deleteDialog">
+        <h3>Are you sure you want to delete this note?</h3>
+        <button class="btn" id="confirmDeleteBtn">Delete</button>
+        <button class="btn" id="cancelDeleteBtn">Cancel</button>
     </div>
 
-    <script src="script.js"></script> <!-- External JS -->
 </body>
+<script src="script.js">
+</script>
 </html>
